@@ -1,3 +1,4 @@
+import { ICopies } from "../Types/interfaces";
 import mongoose, { Document, Schema } from "mongoose";
 
 enum Category {
@@ -11,11 +12,6 @@ enum Category {
     Biography = "Biography",
     Dystopian = "Dystopian",
     History = "History"
-}
-
-interface ICopies {
-    bookItem: string;
-    isAvailable: boolean;
 }
 
 interface IBook extends Document {

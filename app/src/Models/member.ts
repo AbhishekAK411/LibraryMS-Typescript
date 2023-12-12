@@ -1,23 +1,16 @@
-import mongoose, { Schema, Document } from "mongoose";
+import { ICheckOutBooks, IReservedBooks } from "Types/interfaces";
+import mongoose, { Schema, Document, Types } from "mongoose";
 
-interface ICheckOutBooks {
-    bookItem: string;
-    dueDate: Date;
-    fine: number;
-}
-
-interface IReservedBooks {
-    book: string;
-    notificationSent: boolean;
-}
 
 interface IMember extends Document {
+    _id: Types.ObjectId;
     name: string;
-    menberId: string;
+    memberId: string;
     checkedOutBooks: ICheckOutBooks[];
     reservedBooks: IReservedBooks[];
     maxBooksCheckedOut: number;
     maxDaysBooksCanBeKept: number;
+    token: string;
 }
 
 const memberSchema = new Schema({
@@ -70,6 +63,10 @@ const memberSchema = new Schema({
         default: 10,
         min: 0,
         max: 10
+    },
+    token: {
+        type: String,
+        unique: true
     }
 });
 
