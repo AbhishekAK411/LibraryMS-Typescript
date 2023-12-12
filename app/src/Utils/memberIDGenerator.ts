@@ -1,6 +1,6 @@
 /**
  * 
- * @param name string
+ * @param {string} name 
  * @returns randomly generated member ID
  */
 export const memberIDGenerator = (name: string): number => {
