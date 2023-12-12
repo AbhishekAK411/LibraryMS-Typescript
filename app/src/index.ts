@@ -3,7 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import libraryRouter from "./Routes/mainRoutes";
+import router from "./Routes/mainRoutes";
 
 const app = express();
 dotenv.config();
@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
 app.use(morgan('dev'));
-app.use("/lib", libraryRouter);
+app.use("/lib", router);
 
 mongoose.connect(process.env.mongo)
 .then(() => console.log("DB Connection Established."))

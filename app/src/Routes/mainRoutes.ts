@@ -1,5 +1,10 @@
 import express from "express";
+import memberRouter from "./memberRoutes";
+import bookRouter from "./bookRoutes";
 
-const libraryRouter = express.Router();
+const router = express.Router();
 
-export default libraryRouter;
+router.use("/members", memberRouter);
+router.use("/books", bookRouter);
+
+export default router;
