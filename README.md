@@ -15,14 +15,6 @@ Library management systems also involve maintaining the database for entering ne
 
 ### System Requirements
 
-<p align="center">
-    <b>
-        <i>
-            Always clarify requirements at the beginning of the interview. Be sure to ask questions to find the exact scope of the system that the interviewer has in mind.
-        </i>
-    </b>
-</p>
-
 We will focus on the following set of requirements while designing the Library Management System:
 
 1. Any library member should be able to search books by their title, author, subject category as well by the publication date.
