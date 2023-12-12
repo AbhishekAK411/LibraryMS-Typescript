@@ -14,10 +14,11 @@ export const checkCreateMember = async(req: Request, res: Response, next: NextFu
 
 export const checkGetMembers = async(req: Request, res: Response, next: NextFunction) => {
     try {
-        const { memberId } = req.body;
+        const { memberId, token } = req.body;
         if(!memberId) return res.status(404).json({status: 404, success: false, message: "Member Id is required."});
+        if(!token) return res.status(404).json({status: 404, success: false, message: "Please generate a token."});
 
-        if(memberId){
+        if(memberId && token){
             next();
         }
     } catch (error) {

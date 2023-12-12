@@ -25,7 +25,14 @@ export const createMember = async(req: Request, res: Response) => {
 
 export const getMembers = async(req: Request, res: Response) => {
     try {
-        
+        const {memberId, token} = req.body;
+        const findExistingMember = await Member.findOne({memberId}).exec();
+        if(findExistingMember.token!== undefined && findExistingMember.token === token){
+            const findAllMembers = await Member.find({}).exec() as TMember[] | null;
+            return res.status(200).json({status: 200, success: true, message: "retreived members successfully.", members: findAllMembers});
+        }else{
+            return res.status(400).json({status: 400, success: false, message: "Please generate another token."});
+        }
     } catch (error) {
         return res.status(500).json({status: 500, success: false, message: "Internal server error."});
     }
