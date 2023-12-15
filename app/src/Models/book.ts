@@ -20,7 +20,7 @@ interface IBook extends Document {
     subject: string;
     category: Category;
     publicationDate: Date;
-    uniqueID: string;
+    uniqueID?: string;
     rackNumber: string;
     copies: ICopies[];
 }
@@ -51,12 +51,12 @@ const bookSchema = new Schema({
     },
     uniqueID: {
         type: String,
-        required: true,
         unique: true
     },
     rackNumber: {
-        type: String,
+        type: Number,
         required: true,
+        default: 0
     },
     copies: [
         {
