@@ -1,13 +1,16 @@
-import {Document, Types} from "mongoose";
-import { ICheckOutBooks, IReservedBooks } from "./interfaces";
+import { ICheckedOutBooks, IReservedBooks, Role } from "./interfaces";
 
-export type TMember = Document & {
-    _id: Types.ObjectId;
-    name: string;
-    memberId: string;
-    checkedOutBooks : ICheckOutBooks[];
+export type TMember = {
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    contact: string;
+    address: string;
+    checkedOutBooks: ICheckedOutBooks[];
     reservedBooks: IReservedBooks[];
     maxBooksCheckedOut: number;
-    maxDaysBooksCanBeKept: number;
-    token: string;
+    role: Role;
+    join_date: Date;
 }

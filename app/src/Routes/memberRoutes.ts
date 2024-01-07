@@ -1,12 +1,15 @@
-import member from "Models/member";
-import { createMember, getMemberById, getMembers } from "../Controllers/member.controller";
-import { checkCreateMember, checkGetMemberById, checkGetMembers } from "../Middlewares/member.auth";
+
+import { allMembers, createMember } from "../Controllers/member.controller";
+import { validateAllMembers, validateCreateMember } from "../Middlewares/member.auth";
 import express from "express";
 
-const memberRouter = express.Router();
+const router = express.Router();
 
-memberRouter.post("/create", checkCreateMember, createMember);
-memberRouter.post("/", checkGetMembers, getMembers);
-memberRouter.post("/:memberId", checkGetMemberById, getMemberById);
+//* Member routes (member)
+router.get("/", validateAllMembers, allMembers);
+router.post("/create", validateCreateMember, createMember);
+// router.get("/:memberId", validateGetSingleMember, getSingleMember);
+// router.put("/:memberId", validateUpdateMember, updateMember);
+// router.delete("/:memberId", validateDeleteMember, deleteMember);
 
-export default memberRouter;
+export default router;
