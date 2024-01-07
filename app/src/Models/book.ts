@@ -1,5 +1,5 @@
-import { ICopies } from "../Types/interfaces";
-import mongoose, { Document, Schema } from "mongoose";
+import { ICopies } from "Types/interfaces";
+import mongoose, { Schema } from "mongoose";
 
 enum Category {
     Horror = "Horror",
@@ -17,11 +17,10 @@ enum Category {
 interface IBook extends Document {
     title: string;
     author: string;
-    subject: string;
-    category: Category;
+    category: string;
+    isbn: string;
     publicationDate: Date;
-    uniqueID?: string;
-    rackNumber: string;
+    rackNumber: number;
     copies: ICopies[];
 }
 
@@ -29,13 +28,10 @@ const bookSchema = new Schema({
     title: {
         type: String,
         required: true,
+        min: 1,
+        max: 255,
     },
     author: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    subject: {
         type: String,
         required: true,
     },
@@ -43,31 +39,33 @@ const bookSchema = new Schema({
         type: String,
         enum: Object.values(Category),
         default: null,
+        required: true
+    },
+    isbn: {
+        type: String,
         required: true,
+        min: 13,
+        max: 1024
     },
     publicationDate: {
         type: Date,
         required: true,
     },
-    uniqueID: {
-        type: String,
-        unique: true
-    },
     rackNumber: {
         type: Number,
         required: true,
-        default: 0
+        default: null
     },
     copies: [
         {
             bookItem: {
-                type: String,
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Book',
                 required: true,
-                unique: true,
             },
             isAvailable: {
                 type: Boolean,
-                default: true,
+                default: true
             }
         }
     ]

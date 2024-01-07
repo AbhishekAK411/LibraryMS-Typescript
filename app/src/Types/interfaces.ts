@@ -1,15 +1,18 @@
-export interface ICheckOutBooks {
-    bookItem: string;
+import { Types } from "mongoose";
+
+export interface ICheckedOutBooks {
+    bookItem: Types.ObjectId;
     dueDate: Date;
     fine: number;
+    maxDaysBooksCanBeKept: number;
 }
 
 export interface IReservedBooks {
-    book: string;
+    book: Types.ObjectId;
     notificationSent: boolean;
 }
 
 export interface ICopies {
-    bookItem: string;
+    bookItem: Types.ObjectId;
     isAvailable: boolean;
 }
