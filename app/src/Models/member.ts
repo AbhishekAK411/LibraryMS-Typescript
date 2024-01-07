@@ -1,11 +1,7 @@
-import { ICheckedOutBooks, IReservedBooks } from "Types/interfaces";
+import { ICheckedOutBooks, IReservedBooks, Role } from "../Types/interfaces";
 import mongoose, { Schema } from "mongoose";
 
-enum Role {
-    Admin = "Admin",
-    Librarian = "Librarian",
-    Member = "Member",
-}
+
 interface IMember extends Document {
     first_name: string;
     last_name: string;
@@ -97,7 +93,7 @@ const memberSchema = new Schema({
     role: {
         type: String,
         enum: Object.values(Role),
-        default: null,
+        default: "Member",
     },
     join_date: {
         type: Date,

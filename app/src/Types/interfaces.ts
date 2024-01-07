@@ -1,5 +1,10 @@
 import { Types } from "mongoose";
 
+export enum Role {
+    Admin = "Admin",
+    Librarian = "Librarian",
+    Member = "Member",
+}
 export interface ICheckedOutBooks {
     bookItem: Types.ObjectId;
     dueDate: Date;
