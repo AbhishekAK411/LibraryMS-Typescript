@@ -1,23 +1,10 @@
-import { ICopies } from "Types/interfaces";
+import { Category, ICopies } from "../Types/interfaces";
 import mongoose, { Schema } from "mongoose";
-
-enum Category {
-    Horror = "Horror",
-    Fantasy = "Fantasy",
-    Fiction = "Fiction",
-    Mystery = "Mystery",
-    Romance = "Romance",
-    Thriller = "Thriller",
-    Arts = "Arts",
-    Biography = "Biography",
-    Dystopian = "Dystopian",
-    History = "History"
-}
 
 interface IBook extends Document {
     title: string;
     author: string;
-    category: string;
+    category: Category;
     isbn: string;
     publicationDate: Date;
     rackNumber: number;

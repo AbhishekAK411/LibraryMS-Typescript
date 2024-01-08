@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 export const allMembers = async(req: Request, res: Response) => {
     try {
         const findAllMembers = await Member.find().exec();
-        if(findAllMembers){
+        if(findAllMembers.length > 0){
             return res.status(200).json({status: 200, success: true, allMembers: findAllMembers});
         }else{
             return res.status(400).json({status: 400, success: false, message: "No members found."});

@@ -27,6 +27,8 @@ export const validateAllMembers = async(req: Request, res: Response, next: NextF
             } catch (error) {
                 return res.status(401).json({status: 401, success: false, message: "Not authorized."});
             }
+        }else{
+            return res.status(400).json({status: 400, success: false, message: "Authentication failed."});
         }
     } catch (error) {
         return res.status(500).json({status: 500, success: false, message: "Internal server error."});

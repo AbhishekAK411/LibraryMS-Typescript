@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { ICheckedOutBooks, IReservedBooks, Role } from "./interfaces";
+import { Category, ICheckedOutBooks, ICopies, IReservedBooks, Role } from "./interfaces";
 
 export type TMember = {
     first_name: string;
@@ -18,4 +18,14 @@ export type TMember = {
 
 export type TUserID = {
     id: Types.ObjectId
+}
+
+export type TBook = {
+    title: string;
+    author: string;
+    category: Category;
+    isbn: string;
+    publicationDate: Date;
+    rackNumber: number;
+    copies: ICopies[];
 }
