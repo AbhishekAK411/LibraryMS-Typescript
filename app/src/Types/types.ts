@@ -5,7 +5,7 @@ export type TMember = {
     last_name: string;
     email: string;
     password: string;
-    confirmPassword: string;
+    confirmPassword?: string;
     contact: string;
     address: string;
     checkedOutBooks: ICheckedOutBooks[];
