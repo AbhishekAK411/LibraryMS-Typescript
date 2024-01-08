@@ -27,18 +27,19 @@ export const createMember = async(req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         try {
             const newMember = new Member({
-                first_name: first_name,
-                last_name: last_name,
-                email: email,
+                first_name,
+                last_name,
+                email,
                 password: hashedPassword,
-                contact: contact,
-                address: address
+                contact,
+                address
             });
     
             await newMember.save();
             return res.status(201).json({status: 201, success: true, message: "Member registered successfully."});
         } catch (error) {
-            return res.status(400).json({status: 400, success: false, message: error?.message});
+            console.log(error);
+            return res.status(400).json({status: 400, success: false, message: "error"});
         }
         
     } catch (error) {
@@ -57,6 +58,58 @@ export const loginMember = async(req: Request, res: Response) => {
 
         const token: string = jwt.sign(userId, process.env.JWT_SECRET);
         return res.status(200).json({status: 200, success: true, message: "Logged in successfully.", token: token});
+    } catch (error) {
+        return res.status(500).json({status: 500, success: false, message: "Internal server error."});
+    }
+}
+
+export const getSingleMember = async(req: Request, res: Response) => {
+    try {
+        const memberId = req.params.memberId;
+
+        const findSingleMember: TMember = await Member.findById(memberId).exec();
+        return res.status(200).json({status: 200, success: false, member: findSingleMember});
+    } catch (error) {
+        return res.status(500).json({status: 500, success: false, message: "Internal server error."});
+    }
+}
+
+export const updateMember = async(req: Request, res: Response) => {
+    try {
+        const memberId = req.params.memberId;
+        const { first_name, last_name, password, contact, address }: TMember = req.body;
+        
+        const updateMember = await Member.findByIdAndUpdate(memberId, {
+            first_name,
+            last_name,
+            password,
+            contact,
+            address
+        }, {
+            new: true
+        });
+
+        if(updateMember){
+            return res.status(200).json({status: 200, success: true, message: "Updated member successfully.", member: updateMember});
+        }else{
+            return res.status(400).json({status: 400, success: false, message: "Failed to updated member. Please try again."});
+        }
+    } catch (error) {
+        return res.status(500).json({status: 500, success: false, message: "Internal server error."});
+    }
+}
+
+export const deleteMember = async(req: Request, res: Response) => {
+    try {
+        const memberId = req.params.memberId;
+
+        const deleteMember = await Member.findByIdAndDelete(memberId, { new: true}).exec();
+
+        if(deleteMember){
+            return res.status(200).json({status: 200, success: true, message: "Removed member."});
+        }else{
+            return res.status(400).json({status: 400, success: false, message: "Failed to remove member."});
+        }
     } catch (error) {
         return res.status(500).json({status: 500, success: false, message: "Internal server error."});
     }

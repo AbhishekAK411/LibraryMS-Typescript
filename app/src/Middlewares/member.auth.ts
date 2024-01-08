@@ -49,6 +49,7 @@ export const validateCreateMember = async(req: Request, res: Response, next: Nex
         try {
             passwordValidator(password);
         } catch (error) {
+            console.log(error);
             return res.status(400).json({status: 400, success: false, message: error.message});
         }
 
@@ -65,10 +66,52 @@ export const validateLoginMember = async(req: Request, res: Response, next: Next
         if(!password) return res.status(404).json({status: 404, success: false, message: "Password is required."});
 
         const findExistingMember: TMember = await Member.findOne({email}).exec();
-        if(!findExistingMember) return res.status(404).json({status: 404, success: false, message: "user not found."});
+        if(!findExistingMember) return res.status(404).json({status: 404, success: false, message: "Member not found."});
 
         const comparePassword = await bcrypt.compare(password, findExistingMember?.password);
         if(!comparePassword) return res.status(401).json({status: 401, success: false, message: "Invalid credentials."});
+
+        next();
+    } catch (error) {
+        return res.status(500).json({status: 500, success: false, message: "Internal server error."});
+    }
+}
+
+export const validateGetSingleMember = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { memberId } = req.params;
+        if(!memberId) return res.status(404).json({status: 404, success: false, message: "Member id is required."});
+
+        const findExistingMember: TMember = await Member.findById(memberId).exec();
+        if(!findExistingMember) return res.status(404).json({status: 404, success: false, message: "Member not found."});
+
+        next();
+    } catch (error) {
+        return res.status(500).json({status: 500, success: false, message: "Internal server error."});
+    }
+}
+
+export const validateUpdateMember = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+        const memberId = req.params.memberId;
+        if(!memberId) return res.status(404).json({status: 404, success: false, message: "Member id is required."});
+
+        const findExistingMember: TMember = await Member.findById(memberId).exec();
+        if(!findExistingMember) return res.status(404).json({status: 404, success: false, message: "Member not found."});
+
+        next();
+    } catch (error) {
+        return res.status(500).json({status: 500, success: false, message: "Internal server error."});
+    }
+}
+
+export const validateDeleteMember = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+        const memberId = req.params.memberId;
+        if(!memberId) return res.status(404).json({status: 404, success: false, message: "Member id is required."});
+
+        const findExistingMember: TMember = await Member.findById(memberId).exec();
+        if(!findExistingMember) return res.status(404).json({status: 404, success: false, message: "Member not found."});
 
         next();
     } catch (error) {
