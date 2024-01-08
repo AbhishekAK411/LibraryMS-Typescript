@@ -1,7 +1,8 @@
-import { TMember } from "Types/types";
+import { TMember, TUserID } from "Types/types";
 import Member from "../Models/member";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const allMembers = async(req: Request, res: Response) => {
     try {
@@ -37,7 +38,7 @@ export const createMember = async(req: Request, res: Response) => {
             await newMember.save();
             return res.status(201).json({status: 201, success: true, message: "Member registered successfully."});
         } catch (error) {
-            return res.status(400).json({status: 400, success: false, message: error.message});
+            return res.status(400).json({status: 400, success: false, message: error?.message});
         }
         
     } catch (error) {
@@ -47,7 +48,15 @@ export const createMember = async(req: Request, res: Response) => {
 
 export const loginMember = async(req: Request, res: Response) => {
     try {
-        
+        const { email }: TMember = req.body;
+
+        const findExistingMember = await Member.findOne({email}).select("-password").exec();
+        const userId: TUserID = {
+            id: findExistingMember._id
+        }
+
+        const token: string = jwt.sign(userId, process.env.JWT_SECRET);
+        return res.status(200).json({status: 200, success: true, message: "Logged in successfully.", token: token});
     } catch (error) {
         return res.status(500).json({status: 500, success: false, message: "Internal server error."});
     }

@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { ICheckedOutBooks, IReservedBooks, Role } from "./interfaces";
 
 export type TMember = {
@@ -13,4 +14,8 @@ export type TMember = {
     maxBooksCheckedOut: number;
     role: Role;
     join_date: Date;
+}
+
+export type TUserID = {
+    id: Types.ObjectId
 }

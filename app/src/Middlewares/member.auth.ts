@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
 import { passwordValidator } from "../Utils/passwordValidator";
+import bcrypt from "bcrypt";
 
 declare global {
     namespace Express {
@@ -59,7 +60,17 @@ export const validateCreateMember = async(req: Request, res: Response, next: Nex
 
 export const validateLoginMember = async(req: Request, res: Response, next: NextFunction) => {
     try {
-        
+        const {email, password}: TMember = req.body;
+        if(!email) return res.status(404).json({status: 404, success: false, message: "Email is required."});
+        if(!password) return res.status(404).json({status: 404, success: false, message: "Password is required."});
+
+        const findExistingMember: TMember = await Member.findOne({email}).exec();
+        if(!findExistingMember) return res.status(404).json({status: 404, success: false, message: "user not found."});
+
+        const comparePassword = await bcrypt.compare(password, findExistingMember?.password);
+        if(!comparePassword) return res.status(401).json({status: 401, success: false, message: "Invalid credentials."});
+
+        next();
     } catch (error) {
         return res.status(500).json({status: 500, success: false, message: "Internal server error."});
     }
