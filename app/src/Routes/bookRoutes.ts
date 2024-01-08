@@ -5,6 +5,7 @@ import express from "express";
 
 const router = express.Router();
 
+//* Book routes (book)
 router.get("/", validateGetBooks, getBooks);
 router.post("/create", tokenMiddleware, validateCreateBook, createBook);
 router.get("/:bookId", tokenMiddleware, validateGetSingleBook, getSingleBook);

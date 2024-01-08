@@ -92,7 +92,21 @@ export const updateBook = async(req: Request, res: Response) => {
 
 export const deleteBook = async(req: Request, res: Response) => {
     try {
-        
+        const bookId = req.params.bookId;
+
+        const findExistingBook = await Book.findById(bookId).exec();
+        if(findExistingBook.copies.length > 0){
+            findExistingBook.copies.pop();
+            await findExistingBook.save();
+            return res.status(200).json({status: 200, success: true, message: "Book copy removed successfully."});
+        }else{
+            const deleteBook = await Book.findByIdAndDelete(bookId).exec();
+            if(deleteBook){
+                return res.status(200).json({status: 200, success: true, message: "Book removed successfully."});
+            }else{
+                return res.status(400).json({status: 400, success: false, message: "Failed to remove book. Try again later."});
+            }
+        }
     } catch (error) {
         return res.status(500).json({status: 500, success: false, message: "Internal server error."});
     }
