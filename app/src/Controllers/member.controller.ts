@@ -114,3 +114,19 @@ export const deleteMember = async(req: Request, res: Response) => {
         return res.status(500).json({status: 500, success: false, message: "Internal server error."});
     }
 }
+
+export const getCheckedOutBooks = async(req: Request, res: Response) => {
+    try {
+        const memberId = req.params.memberId;
+    } catch (error) {
+        return res.status(500).json({status: 500, success: false, message: "Internal server error."});
+    }
+}
+
+export const checkOutBook = async(req: Request, res: Response) => {
+    try {
+        
+    } catch (error) {
+        return res.status(500).json({status: 500, success: false, message: "Internal server error."});
+    }
+}

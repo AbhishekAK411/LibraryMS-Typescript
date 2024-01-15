@@ -120,3 +120,25 @@ export const validateDeleteMember = async(req: Request, res: Response, next: Nex
         return res.status(500).json({status: 500, success: false, message: "Internal server error."});
     }
 }
+
+export const validateGetCheckedOutBooks = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+        const memberId = req.params.memberId;
+        if(!memberId) return res.status(404).json({status: 404, success: false, message: "Member id is required."});
+
+        const findExistingMember: TMember = await Member.findById(memberId).exec();
+        if(!findExistingMember) return res.status(404).json({status: 404, success: false, message: "Member not found."});
+
+        next();
+    } catch (error) {
+        return res.status(500).json({status: 500, success: false, message: "Internal server error."});
+    }
+}
+
+export const validateCheckOutBook = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+        
+    } catch (error) {
+        return res.status(500).json({status: 500, success: false, message: "Internal server error."});
+    }
+}
