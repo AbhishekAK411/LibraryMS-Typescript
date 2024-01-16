@@ -32,6 +32,7 @@ export interface IReservedBooks {
 }
 
 export interface ICopies {
+    _id?: Types.ObjectId;
     bookItem: Types.ObjectId;
     isAvailable: boolean;
 }

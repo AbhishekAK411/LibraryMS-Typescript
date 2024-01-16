@@ -3,6 +3,7 @@ import Member from "../Models/member";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Book from "../Models/book";
 
 export const allMembers = async(req: Request, res: Response) => {
     try {
@@ -68,7 +69,7 @@ export const getSingleMember = async(req: Request, res: Response) => {
         const memberId = req.params.memberId;
 
         const findSingleMember: TMember = await Member.findById(memberId).exec();
-        return res.status(200).json({status: 200, success: false, member: findSingleMember});
+        return res.status(200).json({status: 200, success: true, member: findSingleMember});
     } catch (error) {
         return res.status(500).json({status: 500, success: false, message: "Internal server error."});
     }
@@ -125,7 +126,42 @@ export const getCheckedOutBooks = async(req: Request, res: Response) => {
 
 export const checkOutBook = async(req: Request, res: Response) => {
     try {
+        const memberId = req.params.memberId;
+        const {bookId} = req.body;
+
+        const findExistingMember = await Member.findById(memberId).exec();
+        if(!findExistingMember) return res.status(404).json({status: 404, success: false, message: "Member not found."});
         
+        const findExistingBook = await Book.findById(bookId).exec();
+        if(!findExistingBook) return res.status(404).json({status: 404, success: false, message: "Book not found."});
+
+        const isBookCheckedOut = findExistingMember.checkedOutBooks.some((checkedOutBook) => {
+            checkedOutBook.bookItem === findExistingBook._id
+        });
+
+        if(isBookCheckedOut){
+            return res.status(400).json({status: 400, success: false, message: `Book is already checked out by ${findExistingMember.first_name + " " + findExistingMember.last_name}`});
+        }else{
+
+            const availableCopyIndex = findExistingBook.copies.findIndex((book) => book.isAvailable);
+            if(availableCopyIndex !== -1){
+                findExistingBook.copies[availableCopyIndex].isAvailable = false;
+
+                findExistingMember.checkedOutBooks.push({
+                    bookItem: findExistingBook.copies[availableCopyIndex]._id,
+                    dueDate: new Date(),
+                    fine: 0,
+                    maxDaysBooksCanBeKept: 10
+                });
+
+                await findExistingMember.save();
+                await findExistingBook.save();
+
+                return res.status(200).json({status: 200, success: true, message: "Book checked out successfully.", member: findExistingMember, book: findExistingBook});
+            }else{
+                return res.status(400).json({status: 400, success: false, message: "Book is not available."});
+            }
+        }
     } catch (error) {
         return res.status(500).json({status: 500, success: false, message: "Internal server error."});
     }

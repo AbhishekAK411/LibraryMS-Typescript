@@ -16,6 +16,6 @@ router.delete("/cross/:memberId", tokenMiddleware, validateDeleteMember, deleteM
 
 //* Member book related routes(member->book)
 router.get("/:memberId/checked-out-books", tokenMiddleware, validateGetCheckedOutBooks, getCheckedOutBooks);
-router.post("/:memberId/archive/checkout", tokenMiddleware, validateCheckOutBook, checkOutBook);
+router.post("/:memberId/checkout", tokenMiddleware, validateCheckOutBook, checkOutBook);
 
 export default router;
