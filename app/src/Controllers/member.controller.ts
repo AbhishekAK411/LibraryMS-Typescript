@@ -154,7 +154,7 @@ export const checkOutBook = async(req: Request, res: Response) => {
             checkedOutBook.bookItem === findExistingBook._id
         });
 
-        if(isBookCheckedOut && findExistingMember.maxBooksCheckedOut === 0){
+        if(isBookCheckedOut || findExistingMember.maxBooksCheckedOut === 0){
             return res.status(400).json({status: 400, success: false, message: `Book is already checked out by ${findExistingMember.first_name + " " + findExistingMember.last_name}`});
         }else{
 
