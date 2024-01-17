@@ -119,6 +119,21 @@ export const deleteMember = async(req: Request, res: Response) => {
 export const getCheckedOutBooks = async(req: Request, res: Response) => {
     try {
         const memberId = req.params.memberId;
+
+        const findExistingMember = await Member.findById(memberId).exec();
+        if(!findExistingMember) return res.status(404).json({status: 404, success: false, message: "Member not found."});
+
+        if(findExistingMember.checkedOutBooks.length > 0){
+            
+            const books = await Book.populate(findExistingMember, {
+                path: 'checkedOutBooks.bookItem',
+                select: 'title author category isbn publicationDate'
+            })
+
+            return res.status(200).json({status: 200, success: true, member: books});
+        }else{
+            return res.status(400).json({status: 400, success: false, message: "Member has not checked out any book."});
+        }
     } catch (error) {
         return res.status(500).json({status: 500, success: false, message: "Internal server error."});
     }
@@ -148,7 +163,7 @@ export const checkOutBook = async(req: Request, res: Response) => {
                 findExistingBook.copies[availableCopyIndex].isAvailable = false;
 
                 findExistingMember.checkedOutBooks.push({
-                    bookItem: findExistingBook.copies[availableCopyIndex]._id,
+                    bookItem: findExistingBook._id,
                     dueDate: new Date(),
                     fine: 0,
                     maxDaysBooksCanBeKept: 10
