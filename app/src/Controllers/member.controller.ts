@@ -128,7 +128,7 @@ export const getCheckedOutBooks = async(req: Request, res: Response) => {
             const books = await Book.populate(findExistingMember, {
                 path: 'checkedOutBooks.bookItem',
                 select: 'title author category isbn publicationDate'
-            })
+            });
 
             return res.status(200).json({status: 200, success: true, member: books});
         }else{
@@ -154,7 +154,7 @@ export const checkOutBook = async(req: Request, res: Response) => {
             checkedOutBook.bookItem === findExistingBook._id
         });
 
-        if(isBookCheckedOut){
+        if(isBookCheckedOut && findExistingMember.maxBooksCheckedOut === 0){
             return res.status(400).json({status: 400, success: false, message: `Book is already checked out by ${findExistingMember.first_name + " " + findExistingMember.last_name}`});
         }else{
 
@@ -169,12 +169,14 @@ export const checkOutBook = async(req: Request, res: Response) => {
                     maxDaysBooksCanBeKept: 10
                 });
 
+                findExistingMember.maxBooksCheckedOut = findExistingMember.maxBooksCheckedOut - 1;
+
                 await findExistingMember.save();
                 await findExistingBook.save();
 
-                return res.status(200).json({status: 200, success: true, message: "Book checked out successfully.", member: findExistingMember, book: findExistingBook});
+                return res.status(200).json({status: 200, success: true, message: "Book checked out successfully."});
             }else{
-                return res.status(400).json({status: 400, success: false, message: "Book is not available."});
+                return res.status(400).json({status: 400, success: false, message: `Book is not available.`});
             }
         }
     } catch (error) {
