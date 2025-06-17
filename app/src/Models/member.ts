@@ -36,6 +36,10 @@ const memberSchema = new Schema({
             "Please use a valid email address.",
         ]
     },
+    session: {
+    type: String,
+        required: true,
+    }
     password: {
         type: String,
         required: true,
